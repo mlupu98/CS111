@@ -1,0 +1,125 @@
+#NAME: Matei Lupu
+#EMAIL: mateilupu20@g.ucla.edu
+#ID: 504798407
+
+SortedList.h: a header file containing definitions for a sorted list implementation.
+
+SortedList.c: source code that defines insert, delete, lookup and length methods for
+a doubly-linked circular list.
+
+lab2_list.c: source code that displays race conditions and the use of locks
+and yields by having multiple threads access the same linked list.
+
+Makefile: has the options build, graphs, tests, dist, profile and clean
+    build: compiles all the files
+    graphs: draws the graphs using gnuplot
+    tests: runs specific test cases to generate results in CSV files
+    dist: creates a tarball with al the required files.
+    clean: removes all files created during compilation
+    profile: uses gperftools to show performance
+
+CSV Files
+    lab2_list.csv:  contains the results for all of the tests done in part 2
+
+.png files:
+
+# lab2b_1.png ... throughput vs. number of threads for mutex and spin-lock synchronized list operations.
+# lab2b_2.png ... mean time per mutex wait and mean time per operation for mutex-synchronized list operations.
+# lab2b_3.png ... successful iterations vs. threads for each synchronization method.
+# lab2b_4.png ... throughput vs. number of threads for mutex synchronized partitioned lists.
+# lab2b_5.png ... throughput vs. number of threads for spin-lock-synchronized partitioned lists.
+
+    lab2b_1.png:   a graph of throughput vd the number of threads for both the mutex and spin-lock sync methods
+
+    lab2b_2.png:   a graph of Average time per operation and the wait-for-lock time vs the number of threads
+
+    lab2b_3.png:   a graph of Checking How Many Iterations are Needed For Failure vs the Number of Threads
+
+    lab2b_4.png:   a graph of Throughput vs the Number of Threads for the Mutex Lock
+
+    lab2b_5.png    a graph of Throughput vs the Number of Threads for the Spin Lock
+
+ resources:
+ https://github.com/gperftools/gperftools/wiki: The only resource needed was this gperftools tutorial
+ as I had never used this resource before. CampusWire also helped to solve some of the issues IO had.
+
+
+Question 2.3.1 - CPU time in the basic list implementation:
+a) There are four options for where time can be spent in these two implementations based
+the number of threads and what type of lock is being uses. If there is only one thread
+most of the time is spent in the list operations (insert, delete, length, lookup). The
+reason for this is that locks only need to get set and released they do not actually have
+to do anything else. The reason for this is that there is only one thread. On the other hand,
+if there are two threads and you are using a spinlock, about an equivalent amount of time will
+be spent with the list operations and spinning. This happens because while one is doing operations
+the other one will spend the same amount of time just spinning. It is possible that spinning will
+take a slightly because when the switch between the two threads happens they will both be spinning
+simultaneously for a short while. Lastly, when a mutex is used for two threads more time will be
+spent on list operations since locking and unlocking doesn't take too long and happens less
+frequently.
+
+
+b) Locking and spinning are the most expensive because they are called by every single thread
+that is part of the program. They can also be intensive operations because spin locking wastes
+cpu resource continuously. Other simpler operations such as getting the time and add and subtracting
+are fairly standard and do not require any OS intervention.
+
+c) In a spin lock the most time is definitely spent spinning. The reason is that all the threads that
+do not have access to the critical section spin simultaneously while waiting for it. This means that
+all of them will consume CPU time while doing this.
+
+d) In the mutex lock most of the time is spent doing the operations. The reason for this is that
+the mutex only has to change a value on and of which is just one operation. On the other hand
+there are a multitude of operations that can happen with the list.
+
+Question 2.3.2 - Execution Profiling
+
+a) The lines that take up most time are lines 152 and 304 in my code. These lines are the lines where
+the spin lock begins and waits for the needed data to be freed. This takes the longest time because
+each single thread uses it and it gets caught in a loop until the needed data or resource is freed
+
+b) This becomes more expensive with larger number of threads because all of them have to use it. Also
+more threads means there is more contention and therefore more time has to be spent by each thread waiting
+for the resource to be unlocked.
+
+Question 2.3.3 - Mutex Wait Time
+
+a) The average wait time increases with the number of threads because the likelihood of the resource
+being available at any given time decreases. Each thread wants to access the resource but each on has
+to wait in line for all of the other threads in front of it. As a result, more threads means more waiting
+time for any given thread.
+
+b) The amount of time per completion does not increase as much because this time does not take into account
+the need to wait for the thread. This measure of time simply looks at how long the operations take
+which will not change as much. It changes a bit because more context switches will be required due to more
+contention.
+
+c) The wait time can be higher than the completion time because it includes the run time and wait time for
+a given operation. With certain locks especially if there are many threads, the wait time can increase
+drastically which would make this become clear.
+
+Question 2.3.4 - Performance of Partitioned Lists
+
+a) If more lists are used with the synchronization of the threads performance will increase. The reason
+for this is that there is less contention that happens and therefore less synchronization that must take
+place. More lists means more separate entities with separate resources that do not pose synchronization
+issues. This drastically decreases the wait time needed during synchronization.
+
+b) This is true until a point. If you have smaller and smaller lists throughput does increase but if the
+lists all have a size of one then it no longer changes by having more lists. Also if you have more lists
+but also more elements this does not mean throughput will increase. What matters is the number of elements
+per list.
+
+c) This does not seem to be the case. The reason for this is that even if there are more threads the
+important factor to keep track of is the amount of time spent in critical sections. N-way partitioned
+arrays with more threads spend less time in critical sections, making throughput higher overall.
+
+
+
+
+
+
+
+
+
+

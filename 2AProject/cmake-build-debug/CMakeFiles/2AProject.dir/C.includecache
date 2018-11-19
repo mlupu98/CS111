@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/mateilupu/Documents/UCLA/CS/CS111/2AProject/SortedList.h
+
+/Users/mateilupu/Documents/UCLA/CS/CS111/2AProject/lab2_list.c
+stdio.h
+-
+pthread.h
+-
+stdlib.h
+-
+getopt.h
+-
+string.h
+-
+signal.h
+-
+unistd.h
+-
+time.h
+-
+SortedList.h
+/Users/mateilupu/Documents/UCLA/CS/CS111/2AProject/SortedList.h
+

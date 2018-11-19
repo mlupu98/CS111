@@ -1,0 +1,3 @@
+/Users/mateilupu/CLionProjects/Project0/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/mateilupu/CLionProjects/Project0/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/mateilupu/CLionProjects/Project0/cmake-build-debug/CMakeFiles/Project0.dir

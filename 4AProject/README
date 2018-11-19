@@ -1,0 +1,23 @@
+#NAME: Matei Lupu
+#ID: 504798407
+#EMAIL: mateilupu20@g.ucla.edu
+
+Project 4A consisted of setting up the beaglebone for the following projects. We had to take multiple screenshots
+of the things we did during the setup. The following are the files present in the tar file.
+
+my_beaglebone.jpg: a picture of me holding my beaglebone
+
+connected.png: a screenshot of the terminal connect to the beaglenbone after the ifconfig command was issued
+
+copy.png: a screenshot of the filezilla app with the HelloWorld file on both my local PC and the beaglebone
+
+build_run: a screenshot of the compilation of HelloWorld by using the command gcc -o and the resulting output
+after running the executable
+
+git.png: a screenshot of the current git version running on the beaglebone and the result of the git clone command
+after cloning my CS111 github repository
+
+The step that I had most problem with was initially connecting to the beaglebone. At first it would not connect
+through the USB and would give me errors. I had to unplug it a few times before it worked. I had the same issue
+with the wireless connection. Also I had to flash my beaglebone before starting the project. The resources I used
+were simply the ones offered on the specifcation.

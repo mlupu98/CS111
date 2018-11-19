@@ -1,0 +1,168 @@
+#NAME: Matei Lupu
+#EMAIL: mateilupu20@g.ucla.edu
+#ID: 504798406
+
+
+lab2_add.c: source code that displays race conditions and the use of locks
+and yields by having multiple threads access the same value.
+
+SortedList.h: a header file containing definitions for a sorted list implementation.
+
+SortedList.c: source code that defines insert, delete, lookup and length methods for
+a doubly-linked circular list.
+
+lab2_list.c: source code that displays race conditions and the use of locks
+and yields by having multiple threads access the same linked list.
+
+Makefile: has the options build, graphs, tests, dist and clean
+    build: compiles all the files
+    graphs: draws the graphs using gnuplot
+    tests: runs specific test cases to generate results in CSV files
+    dist: creates a tarball with al the required files.
+    clean: removes all files created during compilation
+
+CSV Files
+    lab2_add.csv:   contains the results for all of the tests done in part 1
+    lab2_list.csv:  contains the results for all of the tests done in part 2
+
+.png files:
+
+    lab2_add-1.png:    a graph of the number of threads and iterations necessary
+                       to generate a mistake.  It contains data with and without
+                       yields.
+    lab2_add-2.png:    a graph of the average operation time with and without yields
+                       for 2 and 8 threads.
+    lab2_add-3.png:    a graph of the average operation time with and without yields.
+    lab2_add-4.png:    a graph of the number of iterations that run without failure
+                       for a given number of threads.
+    lab2_add-5.png:    a graph of the cost per operation for different types of locks.
+
+    lab2_list-1.png:   a graph of how the cost of operation varies with the number of
+                       iterations.
+    lab2_list-2.png:   a graph of the number of successful iterations for multiple
+                       number of threads with yields.
+    lab2_list-3.png:   a graph of the number of successful iterations for multiple
+                       number of threads with locks.
+    lab2_list-4.png:   a graph of the length-adjusted cost per operation and how it
+                       varies with the number of operations.
+
+
+Question 2.1.1 - causing conflicts:
+a) The reason for this us that taking a thread is a costly endeavor that has to
+be undertaken by the OS (in the case of a pthread). As a result it is possible
+that the first thread has completed its job before the second thread is even created
+when there are such few iterations. Another reason is that the fewer iterations there
+are the smaller the probability that the threads will access the exact same data at
+the exact same time. This needs to happen because this is the only way to get
+incorrect results i.e. need race conditions to occur.
+
+b) Smaller number of iterations will rarely fail because it is less likely that
+they access the data at the same time. Also as stated above threads take a long
+time to create and if you are not running many, time consuming iterations, a
+thread might be done with its job before another is created.
+
+
+https://stackoverflow.com/questions/30931379/what-problems-can-one-face-on-dividing-a-long-long-by-int
+This was used to better understand what the size of certain values should be.
+
+https://www.tutorialspoint.com/c_standard_library/c_function_strcmp.htm
+This was used to understand how to use strcmp. This function had to be used such that NULL pointers
+would not be accessed when creating the linked list. It is also safer than just comparing keys directly.
+
+http://man7.org/linux/man-pages/man7/pthreads.7.html
+Was used to understand how pthreads can be used.
+
+https://linux.die.net/man/2/sched_yield
+Was used to understand how to use use sched_yield().
+
+https://stackoverflow.com/questions/1383363/is-my-spin-lock-implementation-correct-and-optimal
+AN example used to understand how spin locks work.
+
+QUESTION 2.1.2 - cost of yielding:
+
+a) yields are slower because a context switch needs to occur. The thread that
+is currently running needs to yield the CPU and a new threads needs to take
+over. This is an expensive system call that takes time to save the current
+state of the thread and update the CPU with the new thread's data.
+
+b) The additional time is going in the context switch as explained above.
+
+c) It's not possible to get valid per-operation timings with the --yield option
+
+d) The reason for this is that context-switching takes an undetermined amount
+of time. This happens because the thread needs to yield the CPU and then the
+OS needs to save the state of the current thread. After that the stack and PC
+of the new thread has to be brought in and then it can start running. This
+process can vary especially since threads can have differently sized stacks.
+
+QUESTION 2.1.3 - measurement errors:
+
+a) The reason this happens is because the overhead due to thread creation
+becomes less significant as the number of iterations increases. When you
+divide the total amount of time by the number of operations you also have
+to take into account the duration of the thread creation. As a result,
+as more iterations go by that initial amount is divided by a larger number
+and it becomes less significant. This makes teh average cost lower.
+
+b) To find the actual cost per iteration you would need to run a very large
+number of iterations. The reason for this is that as the number of interactions
+approaches infinity the initial time spent on thread creations goes asymptotically
+towards 0. Another solution would be to run 50 and 100 iterations multiple times.
+The difference between the two divided by 50 would be the average cost per iteration.
+You can take it a step further by subtraction numberOfIterations*average duration
+from some of the runs which would give you the cost of creating the thread.
+
+
+QUESTION 2.1.4 - costs of serialization:
+
+a) They perform very closely for small numbers of threads because the
+chance of race conditions and multiple threads accessing a critical section
+simultaneously are small. This becomes a significant issue when there are
+more threads because more of them might wanna access the same data
+simultaneously.
+
+b) An increase in the number of threads will slow down the protected
+operations because more conflicts will arise in critical sections.
+As a result, each thread will have to wait on a larger number of threads
+ultimately taking more time  before each thread can continue its execution.
+
+Question 2.2.1 - scalability of Mutex
+
+a) In the first two parts the cost for each mutex-protected switch
+increases with the number of threads. This happens the probability
+of concurrent attempts to access critical sections increases with
+the number of threads.
+
+b) Both curves increase as the numbers of threads increase. It seems
+that the relationship is fairly linear for both of them. On the other
+hand it can be stated that for Part 2 the an increase in the number
+of threads can sometimes lead to a more significant leap in the cost
+per operation.
+
+c) The reason for which the increase is slightly steeper is because
+the linked lists require more synchronization. Also there is a lot
+more waiting for the lock to be freed that is involved in this scenario.
+
+
+Question 2.2.2 - scalability of spin locks
+
+a) In both scenarios the cost per operation increase with the number of
+threads.For P2 it can be seen that cost per operation increases more
+for spin locks than for mutexes as the number of threads increases.
+Similarly this happens in P1 to but the difference between the two
+slopes is more significant. The reason the shape is increasing is
+because there is more contention for limited resources as the number
+of threads increases.
+
+b) The reason for why this happens is that spin locks use the CPU while
+waiting on other tasks to be finished. The spinlock graph has a more
+abrupt increase from the 4 to 8 mark. The main reason behind this is
+that more threads are using CPU time by just spinning rather than doing
+something useful. On the other hand mutexes do not waste CPU time in such
+a way.
+
+
+
+
+
+

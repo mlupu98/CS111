@@ -1,0 +1,77 @@
+NAME: Matei Lupu
+EMAIL: mateilupu20@g.ucla.edu
+ID: 504798407
+
+The following are the files that are present in the zip
+    
+    lab0.c: source code written in c.
+
+    Makefile: makefile that contains 4 options: default, clean, check and dist. Default simply compiles the source code using the gcc compiler
+    and the -g -Wall and -Wextra options. Clean removes all of the files that are created during compilation. Check runs 5 smoke tests on the 
+    code to ensure that it is functioning properly. Dist creates a zip file containing all of the files listed in this section.
+	      
+    backtrace.png: an image of the backtrace (-bt) option used when using the gdb debugger to show the segmentation fault that occurs with the
+    --segfault option.
+
+    breakpoint an image of a breakpoint right before the segmentation fault occurs. This image shows that the value of the pointer is NULL,
+    presenting the reason for which the segmentation fault occurs.
+
+Smoke Tests:
+
+    fileToFile
+    
+    This test ensures that the contents of the --input file is copied into the --output file. It does this by using the cmp function. 
+    I found out how to use the cmp function by using the following website: https://www.mkssoftware.com/docs/man1/cmp.1.asp. The cmp
+    function returns a value of 0 when the two files it compares are identical. As a result this test checks for the return value of 
+    the cmp function. This test was chosen because it it tests both the input and output functionalities. If they work with each other
+    they should also work independently.
+    
+    forceSegfault
+
+    This test checks to see that a segfault was caused when the --segfault option is used. It does this by verifying that the exit value 
+    of the program is 139, which is the exit value that represents WIFSIGNALED and WTERMSIG according to 
+    https://stackoverflow.com/questions/14599670/what-error-code-does-a-process-that-segfaults-return. 
+   
+    ensureCatch 
+
+    This tests uses both the --segfault and --catch options on the lab0 executable. Once again it checks for the return value of the 
+    program. In this case, as specified by the requirements of the project, the value should be 4.
+    
+    missingInFile
+    
+    This tests check to see that the program handles a missing input file correctly. When an input file is not found the return value
+    should be 2. This test checks that when the executable is run with a filename that does not exist that it returns the correct value.
+
+    noAccesOutFile    
+    
+    This test ensures that the program handles itself correctly when the output file for the --output option does not have write access.
+    This was done by changing the access to the file using the chmod 555 filename command. Next the program was run by ./lab0 --output=filename
+    The output value was checked to be 3 which is the value that the program must return when the output file is missing or cannoit be accessed.
+    https://www.cyberciti.biz/faq/unix-linux-bsd-chmod-numeric-permissions-notation-command/ was the website that was used to double check the
+    values for the different permissions.
+
+Other Resources:
+    
+    https://ftp.gnu.org/old-gnu/Manuals/gdb/html_node/gdb_28.html
+    This website was used to find out how to get the backtrace of a segfault. I also used it to foind out how to look at the value of a pointer.      
+
+    http://man7.org/linux/man-pages/man3/getopt.3.html
+    This website was used to understand how the getopt long function work
+
+    http://man7.org/linux/man-pages/man3/strerror.3.html
+    This website was used to understand how strerror works
+
+    file:///Users/mateilupu/Downloads/fd_juggling.html
+    This was the file that was provided by the instructor that taught file manipulation.
+
+Difficulties:
+
+    The greatest difficulty I faced was to understand how to use the getopt long options. It was difficult to understand exactly how it works 
+    by just reading the man page. As a result, I had to look for examples of when it was used to understand how to use it. The problem with it 
+    was that it has many options and would sometimes not quite understand what each one does and which was the best to use for my scenario. I 
+    used https://www.gnu.org/software/libc/manual/html_node/Getopt-Long-Option-Example.html as an example impleementation to understand how it 
+    works. 
+
+    The second part that was difficult was to understand how to build the smoke tests. At first I was confused as to what I needed to do but 
+    then I realized that the entire make file is sort of like a shell script that can get called with certain commands. All that was left was 
+    to look up the return values of different options with which the script can be run with and doiuble check if they corresponded.

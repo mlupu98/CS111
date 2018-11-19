@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/mateilupu/CLionProjects/Project0/main.c
+unistd.h
+-
+string.h
+-
+errno.h
+-
+getopt.h
+-
+stdbool.h
+-
+stddef.h
+-
+stdio.h
+-
+sys/types.h
+-
+sys/stat.h
+-
+fcntl.h
+-
+signal.h
+-
+
